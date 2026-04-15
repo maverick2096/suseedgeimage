@@ -110,3 +110,16 @@ podman run --privileged --rm -it \
 ## Source Notes
 
 This guide is based on the SUSE Edge 3.5 documentation for Edge Image Builder, remote host onboarding with Elemental, Edge networking, and Elemental TPM guidance.
+
+
+kubectl create namespace cattle-elemental-system
+
+helm install elemental-operator-crds \
+  oci://registry.suse.com/rancher/elemental-operator-crds-chart \
+  --version 1.8.1 \
+  -n cattle-elemental-system
+
+helm install elemental-operator \
+  oci://registry.suse.com/rancher/elemental-operator-chart \
+  --version 1.8.1 \
+  -n cattle-elemental-system
