@@ -1,0 +1,16 @@
+apiVersion: elemental.cattle.io/v1beta1
+kind: MachineRegistration
+metadata:
+  name: edge-auto
+  namespace: fleet-default
+spec:
+  machineName: "${System Information/Hostname}"
+
+  machineInventoryLabels:
+    deploymentType: "remote-edge"
+
+  config:
+    elemental:
+      registration:
+        emulate-tpm: true
+        emulated-tpm-seed: -1
