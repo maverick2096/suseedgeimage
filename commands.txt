@@ -1,0 +1,18 @@
+cd /root/eib
+
+mkdir -p os-files/etc/pki/trust/anchors
+mkdir -p os-files/etc/sudoers.d
+mkdir -p os-files/etc/sysctl.d
+
+mv os-files/ca/corp-cloudflare-chain.pem \
+   os-files/etc/pki/trust/anchors/corp-cloudflare-chain.pem
+
+mv os-files/sudoers/buildadmin \
+   os-files/etc/sudoers.d/buildadmin
+
+mv os-files/sysctl/99-disable-ipv6.conf \
+   os-files/etc/sysctl.d/99-disable-ipv6.conf
+
+chmod 0644 os-files/etc/pki/trust/anchors/corp-cloudflare-chain.pem
+chmod 0440 os-files/etc/sudoers.d/buildadmin
+chmod 0644 os-files/etc/sysctl.d/99-disable-ipv6.conf
