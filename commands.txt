@@ -39,3 +39,19 @@ curl -Iv https://updates.suse.com
 
 cp /eib/os-files/etc/pki/trust/anchors/corp-cloudflare-chain.pem /etc/pki/trust/anchors/
 update-ca-certificates
+
+
+cd /eib/_build/build-May04_20-52-21
+
+find . -type f | sort
+
+grep -RniE "error|failed|problem|nothing provides|no provider|not found|SUSEConnect|zypper|certificate|SSL|curl|repo|repository" .
+
+find . -name "*resolver*" -o -name "*.log"
+
+find . -name "*resolver*" -o -name "*.log"
+
+cat prepare-resolver-base-tarball-image.log 2>/dev/null || true
+cat prepare-resolver-base-tarball-image-debug.log 2>/dev/null || true
+cat resolver-image-build.log 2>/dev/null || true
+cat pkg-resolver.log 2>/dev/null || true
