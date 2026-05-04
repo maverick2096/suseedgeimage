@@ -16,3 +16,12 @@ mv os-files/sysctl/99-disable-ipv6.conf \
 chmod 0644 os-files/etc/pki/trust/anchors/corp-cloudflare-chain.pem
 chmod 0440 os-files/etc/sudoers.d/buildadmin
 chmod 0644 os-files/etc/sysctl.d/99-disable-ipv6.conf
+
+rmdir os-files/ca os-files/sudoers os-files/sysctl 2>/dev/null || true
+
+mv mahineregistration.yaml machineregistration.yaml
+
+chmod +x custom/scripts/post.sh
+chmod 0440 os-files/etc/sudoers.d/buildadmin
+chmod 0644 os-files/etc/sysctl.d/99-disable-ipv6.conf
+chmod 0644 os-files/etc/pki/trust/anchors/corp-cloudflare-chain.pem
