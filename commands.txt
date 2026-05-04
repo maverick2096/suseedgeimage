@@ -25,3 +25,17 @@ chmod +x custom/scripts/post.sh
 chmod 0440 os-files/etc/sudoers.d/buildadmin
 chmod 0644 os-files/etc/sysctl.d/99-disable-ipv6.conf
 chmod 0644 os-files/etc/pki/trust/anchors/corp-cloudflare-chain.pem
+
+curl -Iv https://scc.suse.com
+curl -Iv https://updates.suse.com
+curl -Iv https://registry.suse.com
+
+podman run --rm -it \
+  registry.suse.com/edge/3.5/edge-image-builder:1.3.3 \
+  bash
+
+curl -Iv https://scc.suse.com
+curl -Iv https://updates.suse.com
+
+cp /eib/os-files/etc/pki/trust/anchors/corp-cloudflare-chain.pem /etc/pki/trust/anchors/
+update-ca-certificates
