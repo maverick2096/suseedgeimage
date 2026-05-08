@@ -1,3 +1,40 @@
+# Step 1: Extract the full cert chain from the intercepted host
+echo | openssl s_client -showcerts -connect production.cloudflare.docker.com:443 -servername production.cloudflare.docker.com 2>/dev/null \
+  | awk '/BEGIN CERTIFICATE/,/END CERTIFICATE/' \
+  > /tmp/cloudflare-docker-chain.pem
+
+# Step 2: See what CA is doing the interception
+openssl crl2pkcs7 -nocrl -certfile /tmp/cloudflare-docker-chain.pem \
+  | openssl pkcs7 -print_certs -noout
+
+
+⁠ **Paste that output.** You'll see issuer/subject pairs that identify who's intercepting — likely something like `Advance Auto Parts Proxy CA`, `Zscaler`, `Palo Alto`, etc.
+
+## Then Install It into the OS Trust Store
+
+ ⁠bash
+# Step 3: Install the chain as a trust anchor
+cp /tmp/cloudflare-docker-chain.pem /etc/pki/trust/anchors/corp-cloudflare-chain.pem
+
+# Step 4: Regenerate the trust bundle (this is what Go reads)
+update-ca-certificates
+
+# Step 5: Verify the chain is now trusted
+echo | openssl s_client -connect production.cloudflare.docker.com:443 -servername production.cloudflare.docker.com 2>&1 \
+  | grep "verify return"
+# Should now show all "verify return:1" - no more "self-signed" error
+
+# Step 6: Clear agent state and retry
+rm -rf /var/lib/rancher/agent/applied/* /var/lib/rancher/agent/work/*
+systemctl restart rancher-system-agent
+
+# Step 7: Watch the magic happen
+journalctl -u rancher-system-agent -f --no-pager \
+  | grep -viE "probe|x509.*server-ca|loading CA|appending ca|server-ca.crt|kube-apiserver|kube-controller-manager|kube-scheduler"
+```
+
+
+
 sudo nmcli connection modify "ens3" \
   ipv4.addresses 192.168.1.50/24 \
   ipv4.gateway 192.168.1.1 \
